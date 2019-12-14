@@ -14,7 +14,7 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '10'))
     }
     triggers{
-        gitlab( triggerOnPush: true,
+        github( triggerOnPush: true,
                 triggerOnMergeRequest: true,
                 branchFilterType: 'All',
                 secretToken: "${env.git_token}")

@@ -21,8 +21,9 @@ pipeline {
                 script {
                     try {
                         sh '''
-                            mkdir -p ${remote_dir}
-                            rsync -avz --exclude='JenkinsFile' --exclude=.git --delete ${WORKSPACE}  ${remote_dir}
+                            mkdir -p /media/${project}
+                            rsync -avz --exclude='JenkinsFile' --exclude=.git --delete ${WORKSPACE}  /media/${project}/${BUILD_ID}
+                            rm -rf $remote_dir && ln -s /media/${project}/${BUILD_ID} $remote_dir
                             chown -R  nginx.nginx ${remote_dir}/${JOB_NAME}
                         '''
                     } catch(err) {
@@ -39,8 +40,8 @@ pipeline {
                 script {
                     try {
                         sh '''
-                            last_success=$(ls -lt ${remote_dir} | sed -n '3p' | awk '{print \$9}')
-                            
+                            last_success=$(ls -lt /media/${project} | sed -n '3p' | awk '{print \$9}')
+                            rm -rf $remote_dir && ln -s /media/${project}/${last_success} $remote_dir
                         '''
                     } catch(err) {
                         echo "${err}"
@@ -48,11 +49,5 @@ pipeline {
                 }
             }
         }
-        //stage('清理工作空间') {
-        //    steps {
-        //        echo '清理工作空间'
-        //        cleanWs()
-        //    }
-        //}
     }
 }

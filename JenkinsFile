@@ -47,11 +47,11 @@ pipeline {
                 }
             }
         }
-        stage('清理工作空间') {
-            steps {
-                echo '清理工作空间'
-                cleanWs()
-            }
-        }
+        //stage('清理工作空间') {
+        //    steps {
+        //        echo '清理工作空间'
+        //        cleanWs()
+        //    }
+        //}
     }
 }

@@ -23,6 +23,7 @@ pipeline {
                         sh '''
                             mkdir -p ${remote_dir}
                             rsync -avz --exclude='JenkinsFile' --exclude=.git --delete ${WORKSPACE}  ${remote_dir}
+                            chown -R  nginx.nginx ${remote_dir}/${JOB_NAME}
                         '''
                     } catch(err) {
                         echo "${err}"

@@ -8,7 +8,7 @@ pipeline {
     }
     
     stages {    
-        stage('代码拉取'){
+        stage('拉取代码'){
             steps {
                 echo "checkout from ${ITEMNAME}"
                 git url: ' git@github.com:yangsirs/demo.git', branch: 'master'
@@ -34,7 +34,7 @@ pipeline {
             }
         }    
         
-        stage('代码推送') {
+        stage('推送代码') {
             steps {
                 echo "code sync"
                 sh '''
@@ -42,6 +42,17 @@ pipeline {
                     chown -R  nginx  ${DESTPATH}/demo
                 '''
             }
+        }
+    }
+    
+    post {
+        success {
+            echo 'I succeeeded!'
+        }
+        failure {
+            mail to: 'yangjingwen@pxjy.com',
+            subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+            body: "Something is wrong with ${env.BUILD_URL}"
         }
     }
 }

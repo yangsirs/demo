@@ -1,0 +1,68 @@
+pipeline {
+    agent any
+    environment {
+        // 定义项目名称方便全局引用
+        project     = "demo"
+        // 远程主机地址，这里只演示了一台，如果是多台，可以空格继续写，下边的部署嵌套个for循环即可
+        remote_ip   = "192.168.10.25"
+        remote_dir  = "/app/webroot/${JOB_NAME}"
+    }
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+        timeout(time: 10, unit: 'MINUTES')
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+    triggers{
+        gitlab( triggerOnPush: true,
+                triggerOnMergeRequest: true,
+                branchFilterType: 'All',
+                secretToken: "${env.git_token}")
+    }
+    // 这里使用参数化构建的方式，而没有使用input参数，下边会说明一下原因。
+    parameters {
+        choice(name: 'MODE', choices: ['deploy','rollback'], description: '请选择发布或者回滚？')
+    }
+    stages {
+        stage('部署') {
+            when {
+                environment name: 'MODE',value: 'deploy'
+            }
+            steps {
+                script {
+                    try {
+                        sh '''
+                            mkdir -p ${remote_dir}
+                            rsync -avz --exclude='JenkinsFile' --exclude=.git --delete ${WORKSPACE}/$JOB_NAME  ${remote_dir}/${BUILD_ID}
+                        '''
+                    } catch(err) {
+                        echo "${err}"
+                    }
+                }
+            }
+        }
+        stage('回滚') {
+            when {
+                environment name: 'MODE',value: 'rollback'
+            }
+            steps {
+                script {
+                    try {
+                        sh '''
+                            last_success=$(ls -lt ${remote_dir} | sed -n '3p' | awk '{print \$9}')
+                            
+                        '''
+                    } catch(err) {
+                        echo "${err}"
+                    }
+                }
+            }
+        }
+        stage('清理工作空间') {
+            steps {
+                echo '清理工作空间'
+                cleanWs()
+            }
+        }
+    }
+}

@@ -38,7 +38,7 @@ pipeline {
             steps {
                 echo "code sync"
                 sh '''
-                    rsync -avz --exclude=.git --delete ${codePATH}  ${DESTPATH}
+                    rsync -avz --exclude=.git --exclude=jenkinsfile --delete ${codePATH}  ${DESTPATH}
                     chown -R  nginx  ${DESTPATH}/${JOB_NAME}
                 '''
             }
@@ -56,5 +56,3 @@ pipeline {
         }
     }
 }
-
-//fjkslajf 

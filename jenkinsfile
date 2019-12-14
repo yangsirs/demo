@@ -2,9 +2,9 @@ pipeline {
     agent any
     
     environment { 
-        def ITEMNAME = "demo"
+        def ITEMNAME = "${JOB_NAME}"
         def DESTPATH = "/app/webroot"
-        def codePATH = "/app/jenkins/workspace/demo"
+        def codePATH = "/app/jenkins/workspace/${JOB_NAME}"
     }
     
     stages {    
@@ -38,8 +38,8 @@ pipeline {
             steps {
                 echo "code sync"
                 sh '''
-                    rsync -avz --exclude=.git  ${codePATH}  ${DESTPATH}
-                    chown -R  nginx  ${DESTPATH}/demo
+                    rsync -avz --exclude=.git --delete ${codePATH}  ${DESTPATH}
+                    chown -R  nginx  ${DESTPATH}/${JOB_NAME}
                 '''
             }
         }

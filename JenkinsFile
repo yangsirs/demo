@@ -7,18 +7,7 @@ pipeline {
         remote_ip   = "192.168.10.25"
         remote_dir  = "/app/webroot/${JOB_NAME}"
     }
-    options {
-        timestamps()
-        disableConcurrentBuilds()
-        timeout(time: 10, unit: 'MINUTES')
-        buildDiscarder(logRotator(numToKeepStr: '10'))
-    }
-    triggers{
-        github( triggerOnPush: true,
-                triggerOnMergeRequest: true,
-                branchFilterType: 'All',
-                secretToken: "${env.git_token}")
-    }
+
     // 这里使用参数化构建的方式，而没有使用input参数，下边会说明一下原因。
     parameters {
         choice(name: 'MODE', choices: ['deploy','rollback'], description: '请选择发布或者回滚？')

@@ -16,10 +16,10 @@ pipeline {
         choice(name: 'MODE', choices: ['deploy','rollback'], description: '请选择发布或者回滚？')
     }
     stages {   
-        when {
-            environment name: 'MODE',value: 'deploy'
-        }
         stage('拉取代码'){
+            when {
+                environment name: 'MODE',value: 'deploy'
+            }
             steps {
                 echo "checkout from ${ITEMNAME}"
                 git url: ' git@github.com:yangsirs/demo.git', branch: 'master'

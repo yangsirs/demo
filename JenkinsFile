@@ -6,7 +6,7 @@ pipeline {
         // 远程主机地址，这里只演示了一台，如果是多台，可以空格继续写，下边的部署嵌套个for循环即可
         remote_ip="192.168.10.25"
         remote_dir="/app/webroot"
-        before_bulid="$rollback_version"
+        //$rollback_version 为字符参数中的配置的变量
     }
 
     // 这里使用参数化构建的方式，而没有使用input参数，下边会说明一下原因。
@@ -42,7 +42,7 @@ pipeline {
                 script {
                     try {
                         sh '''
-                            cd  /app/backup/${project}/${before_bulid}  && tar xf ${project}.tgz
+                            cd  /app/backup/${project}/${rollback_version}  && tar xf ${project}.tgz
                             rsync -avz --delete ${project}  ${remote_dir}
                             rm -rf ${project}
                             chown -R nginx.nginx  ${remote_dir}/${project}

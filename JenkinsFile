@@ -2,10 +2,12 @@ pipeline {
     agent any
     environment {
         // 定义web项目目录名称
-        project="demo"
+        def project    = "demo"
+        //jenkins-workspace中的项目名称
+        def ITEMNAME   = "${JOB_NAME}"
         // 远程主机地址，这里只演示了一台，如果是多台，可以空格继续写，下边的部署嵌套个for循环即可
-        remote_ip="192.168.10.25"
-        remote_dir="/app/webroot"
+        def remote_ip  = "192.168.10.25"
+        def remote_dir = "/app/webroot"
         //$rollback_version 为字符参数中的配置的变量
     }
 
@@ -13,7 +15,51 @@ pipeline {
     parameters {
         choice(name: 'MODE', choices: ['deploy','rollback'], description: '请选择发布或者回滚？')
     }
-    stages {
+    stages {   
+        when {
+            environment name: 'MODE',value: 'deploy'
+        }
+        stage('拉取代码'){
+            steps {
+                echo "checkout from ${ITEMNAME}"
+                git url: ' git@github.com:yangsirs/demo.git', branch: 'master'
+            }
+        }
+        
+        stage('目录检查') {
+            when {
+                environment name: 'MODE',value: 'deploy'
+            }
+            steps {
+                echo "检查${remote_dir}目录是否存在"
+                script{
+                    def resultUpdateshell = sh script: 'ls ${remote_dir}'
+                    if (resultUpdateshell == 0) {
+                        skip = '0'
+                        return
+                    }   
+                }
+            }
+        }
+
+        stage('发布确认') {
+            when {
+                environment name: 'MODE',value: 'deploy'
+            }
+            steps {
+                input "检查完成，是否发布?"
+            }
+        }
+        
+        stage('回滚确认') {
+            when {
+                environment name: 'MODE',value: 'rollback'
+            }
+            steps {
+                input "检查完成，是否回滚?"
+            }
+        }
+        
         stage('部署') {
             when {
                 environment name: 'MODE',value: 'deploy'

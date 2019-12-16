@@ -21,10 +21,11 @@ pipeline {
                 script {
                     try {
                         sh '''
-                            mkdir -p /media/${project}
-                            rsync -avz --exclude='JenkinsFile' --exclude=.git --delete ${WORKSPACE}  /media/${project}/${BUILD_ID}
-                            rm -rf $remote_dir && ln -s /media/${project}/${BUILD_ID} $remote_dir
-                            chown -R  nginx.nginx ${remote_dir}/${JOB_NAME}
+                            mkdir -p /app/backup/${project}
+                            cd    ${remote_dir}
+                            tar zcf /app/backup/${project}/${project}.`date +%F`.tgz   ${project}
+                            rsync -avz --exclude='JenkinsFile' --exclude=.git --delete ${WORKSPACE}  ${remote_dir}
+                            chown -R  nginx.nginx ${remote_dir}/${project}
                         '''
                     } catch(err) {
                         echo "${err}"

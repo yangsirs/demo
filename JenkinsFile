@@ -21,9 +21,9 @@ pipeline {
                 script {
                     try {
                         sh '''
-                            mkdir -p /app/backup/${project}
+                            mkdir -p /app/backup/${project}/${BUILD_ID}
                             cd    ${remote_dir}
-                            tar zcf /app/backup/${project}/${project}.`date +%F`.tgz   ${project}
+                            tar zcf /app/backup/${project}/${BUILD_ID}/${project}.tgz   ${project}
                             rsync -avz --exclude='JenkinsFile' --exclude=.git --delete ${WORKSPACE}  ${remote_dir}
                             chown -R  nginx.nginx ${remote_dir}/${project}
                         '''
@@ -41,8 +41,9 @@ pipeline {
                 script {
                     try {
                         sh '''
-                            last_success=$(ls -lt /media/${project} | sed -n '3p' | awk '{print \$9}')
-                            rm -rf $remote_dir && ln -s /media/${project}/${last_success} $remote_dir
+                            cd  ${remote_dir}
+                            tar xf  /app/backup/${project}/${project}.`date +%
+                            F`.tgz  .
                         '''
                     } catch(err) {
                         echo "${err}"

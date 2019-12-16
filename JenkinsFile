@@ -23,9 +23,9 @@ pipeline {
                     try {
                         sh '''
                             //数据文件备份
-                            echo -e "\033[32m[ tomcat started success on $current_env !  ]\033[0m"
-                            sshpass -p admin ssh  root@${remote_ip} "mkdir -p /app/backup/${project}/${BUILD_ID}"
-                            sshpass -p admin ssh  root@${remote_ip} "cd ${remote_dir} && tar zcf ${project}.tgz ${project}  &&  mv ${project}.tgz /app/backup/${project}/${BUILD_ID}
+                            //echo -e "\033[32m[ tomcat started success on $current_env !  ]\033[0m"
+                            //sshpass -p admin ssh  root@${remote_ip} "mkdir -p /app/backup/${project}/${BUILD_ID}"
+                            //sshpass -p admin ssh  root@${remote_ip} "cd ${remote_dir} && tar zcf ${project}.tgz ${project}  &&  mv ${project}.tgz /app/backup/${project}/${BUILD_ID}
                             
                             //数据文件更新
                             rsync -avz --exclude='JenkinsFile' --exclude=.git --delete ${WORKSPACE}  ${remote_dir}

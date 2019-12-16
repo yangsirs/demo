@@ -42,10 +42,9 @@ pipeline {
                 script {
                     try {
                         sh '''
-                            cd  /app/backup/${project}/${rollback_version}  && tar xf ${project}.tgz
-                            rsync -avz --delete ${project}  ${remote_dir}
-                            rm -rf ${project}
-                            chown -R nginx.nginx  ${remote_dir}/${project}
+                            cd    /app/backup/${project}/${rollback_version}  && tar xf ${project}.tgz
+                            rsync -avz --delete ${project}    ${remote_dir}
+                            rm    -rf ${project}  &&  chown -R  nginx.nginx  ${remote_dir}/${project}
                         '''
                     } catch(err) {
                         echo "${err}"

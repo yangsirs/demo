@@ -6,6 +6,7 @@ pipeline {
         // 远程主机地址，这里只演示了一台，如果是多台，可以空格继续写，下边的部署嵌套个for循环即可
         remote_ip   = "192.168.10.25"
         remote_dir  = "/app/webroot"
+        before_bulid = `expr ${BUILD_ID} - 1`
     }
 
     // 这里使用参数化构建的方式，而没有使用input参数，下边会说明一下原因。
@@ -21,9 +22,12 @@ pipeline {
                 script {
                     try {
                         sh '''
+                            //数据文件备份
                             mkdir -p /app/backup/${project}/${BUILD_ID}
-                            cd    ${remote_dir}
-                            tar zcf /app/backup/${project}/${BUILD_ID}/${project}.tgz   ${project}
+                            cd    ${remote_dir} 
+                            tar zcf ${project}.tgz ${project}  &&  mv ${project}.tgz /app/backup/${project}/${BUILD_ID}
+                            
+                            //数据文件更新
                             rsync -avz --exclude='JenkinsFile' --exclude=.git --delete ${WORKSPACE}  ${remote_dir}
                             chown -R  nginx.nginx ${remote_dir}/${project}
                         '''
@@ -41,9 +45,11 @@ pipeline {
                 script {
                     try {
                         sh '''
-                            cd  ${remote_dir}
-                            tar xf  /app/backup/${project}/${project}.`date +%
-                            F`.tgz  .
+                            //数据文件回滚
+                            cd  /app/backup/${project}/${before_bulid}  && tar xf ${project}.tgz
+                            rsync -avz --delete ${project}  ${remote_dir}
+                            rm -rf ${project}
+                            chown -R nginx.nginx  ${remote_dir}/${project}
                         '''
                     } catch(err) {
                         echo "${err}"

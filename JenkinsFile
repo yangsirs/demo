@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        // 定义项目名称方便全局引用
+        // 定义web项目目录名称
         project="demo"
         // 远程主机地址，这里只演示了一台，如果是多台，可以空格继续写，下边的部署嵌套个for循环即可
         remote_ip="192.168.10.25"
@@ -23,6 +23,7 @@ pipeline {
                     try {
                         sh '''
                             //数据文件备份
+                            echo -e "\033[32m[ tomcat started success on $current_env !  ]\033[0m"
                             sshpass -p admin ssh  root@${remote_ip} "mkdir -p /app/backup/${project}/${BUILD_ID}"
                             sshpass -p admin ssh  root@${remote_ip} "cd ${remote_dir} && tar zcf ${project}.tgz ${project}  &&  mv ${project}.tgz /app/backup/${project}/${BUILD_ID}
                             

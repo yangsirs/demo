@@ -64,7 +64,7 @@ pipeline {
                                 &&  cd  ${remote_dir}  &&  tar zcf  ${project}.tgz ${project}          \
                                 &&  mv  ${project}.tgz  ${bak_dir}/${BUILD_ID}"
                             
-                            rsync -avz -e 'ssh -p 22' --exclude='JenkinsFile-php-remote' --exclude=.git --delete ${WORKSPACE}  root@${remote_ip}:${remote_dir} 
+                            rsync -avz --exclude='JenkinsFile-php-remote' --exclude=.git --delete ${WORKSPACE}  root@${remote_ip}:${remote_dir} 
                             ssh root@${remote_ip} "chown -R  nginx.nginx ${remote_dir}/${project}"
                         '''
                     } catch(err) {

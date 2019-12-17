@@ -34,7 +34,7 @@ pipeline {
             steps {
                 echo "检查${remote_dir}目录是否存在"
                 script{
-                    def resultUpdateshell = sh script: 'sshpass -p admin  ssh root@${remote_ip} "ls ${remote_dir}"'
+                    def resultUpdateshell = sh script: 'ssh root@${remote_ip} "ls ${remote_dir}"'
                     if (resultUpdateshell == 0) {
                         skip = '0'
                         return

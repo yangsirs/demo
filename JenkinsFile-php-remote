@@ -60,12 +60,12 @@ pipeline {
                 script {
                     try {
                         sh '''
-                            sshpass -p admin  ssh root@${remote_ip} "mkdir -p  ${bak_dir}/${BUILD_ID}  \
+                            ssh root@${remote_ip} "mkdir -p  ${bak_dir}/${BUILD_ID}  \
                                 &&  cd  ${remote_dir}  &&  tar zcf  ${project}.tgz ${project}          \
                                 &&  mv  ${project}.tgz  ${bak_dir}/${BUILD_ID}"
                             
                             rsync -avz -e 'ssh -p 22' --exclude='JenkinsFile-php-remote' --exclude=.git --delete ${WORKSPACE}  root@${remote_ip}:{remote_dir} 
-                            sshpass -p admin  ssh root@${remote_ip} "chown -R  nginx.nginx ${remote_dir}/${project}"
+                            ssh root@${remote_ip} "chown -R  nginx.nginx ${remote_dir}/${project}"
                         '''
                     } catch(err) {
                         echo "${err}"
@@ -91,7 +91,7 @@ pipeline {
                 script {
                     try {
                         sh '''
-                            sshpass -p admin  ssh root@${remote_ip} "cd ${bak_dir}/${rollback_version}     \
+                            ssh root@${remote_ip} "cd ${bak_dir}/${rollback_version}     \
                               &&  tar xf ${project}.tgz  &&  rsync -avz --delete ${project}  ${remote_dir} \
                               &&  rm   -rf ${project} &&  chown -R  nginx.nginx  ${remote_dir}/${project}"
                         '''

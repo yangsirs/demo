@@ -26,12 +26,8 @@ pipeline {
             when {
                 environment name: 'MODE',value: 'deploy'
             }
-            //steps {
-            //    echo "checkout from ${JOB_NAME}"
-            //    git url: ' git@github.com:yangsirs/demo.git', branch: 'master'
-            //}
             steps {
-                echo 'Checkout from ${JOB_NAME}'
+                echo "Checkout from ${JOB_NAME}"
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '299d9d55-0dc7-4917-b6ed-4896a8637a46', url: 'git@github.com:yangsirs/demo.git']]])
             }
         }

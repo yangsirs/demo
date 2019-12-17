@@ -112,7 +112,7 @@ pipeline {
             echo 'I succeeeded!'
         }
         failure {
-            mail to: 'yangjingwen@pxjy.com',
+            mail to: 'yangjingwen@pxjy.com,18701693001@163.com',
             subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
             body: "Something is wrong with ${env.BUILD_URL}"
         }

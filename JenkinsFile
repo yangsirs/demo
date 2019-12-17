@@ -30,7 +30,7 @@ pipeline {
                 environment name: 'MODE',value: 'deploy'
             }
             steps {
-                echo "#0000AAcheckout from ${JOB_NAME}#0000AA"
+                echo "checkout from ${JOB_NAME}"
                 git url: ' git@github.com:yangsirs/demo.git', branch: 'master'
             }
             //steps {

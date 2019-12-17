@@ -26,14 +26,14 @@ pipeline {
             when {
                 environment name: 'MODE',value: 'deploy'
             }
-            steps {
-                echo "checkout from ${JOB_NAME}"
-                git url: ' git@github.com:yangsirs/demo.git', branch: 'master'
-            }
             //steps {
-            //   echo 'Checkout from ${JOB_NAME}'
-            //    checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'b9b69c2d-06c7-42cd-b021-4bc9a87bf916', url: 'git@github.com:yangsirs/demo.git']]])
+            //    echo "checkout from ${JOB_NAME}"
+            //    git url: ' git@github.com:yangsirs/demo.git', branch: 'master'
             //}
+            steps {
+                echo 'Checkout from ${JOB_NAME}'
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '299d9d55-0dc7-4917-b6ed-4896a8637a46', url: 'git@github.com:yangsirs/demo.git']]])
+            }
         }
         
         stage('目录检查') {
@@ -70,7 +70,8 @@ pipeline {
                     try {
                         sh '''
                             mkdir -p ${bak_dir}/${BUILD_ID}
-                            cd ${remote_dir} && tar zcf ${project}.tgz ${project} && mv ${project}.tgz ${bak_dir}/${BUILD_ID}
+                            cd ${remote_dir} && tar zcf ${project}.tgz ${project} 
+                            mv ${project}.tgz ${bak_dir}/${BUILD_ID}
                             
                             rsync -avz --exclude='JenkinsFile' --exclude=.git --delete ${WORKSPACE}  ${remote_dir}
                             chown -R  nginx.nginx ${remote_dir}/${project}

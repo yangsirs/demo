@@ -7,7 +7,7 @@ pipeline {
         
         // 远程主机地址，这里只演示了一台，如果是多台，可以空格继续写，下边的部署嵌套个for循环即可
         def remote_ip  = "192.168.10.25"
-        def remote_dir = "/app/webroot12"
+        def remote_dir = "/app/webroot"
         
         //服务器中，备份文件目录
         def bak_dir    = "/app/backup/${project}"

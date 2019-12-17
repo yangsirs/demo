@@ -2,15 +2,10 @@ pipeline {
     agent any
     
     environment {
-        // 定义ECS中web项目目录名称
-        def project    = "demo"
-        
-        // 远程主机地址，这里只演示了一台，如果是多台，可以空格继续写，下边的部署嵌套个for循环即可
-        def remote_ip  = "192.168.10.25"
-        def remote_dir = "/app/webroot"
-        
-        //服务器中，备份文件目录
-        def bak_dir    = "/app/backup/${project}"
+        def project    = "demo"                    // 定义主机中web项目目录名称
+        def remote_ip  = "192.168.10.25"           // 远程主机地址，这里只演示了一台，如果是多台，可以空格继续写
+        def remote_dir = "/app/webroot"            // 远程主机的网站目录
+        def bak_dir    = "/app/backup/${project}"  // 远程主机的备份文件存放目录
         
         //$rollback_version 为字符参数中的配置的变量
         //$JOB_NAME         为jenkins中workspace里的项目目录名称

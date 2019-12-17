@@ -50,7 +50,9 @@ pipeline {
                     if (resultUpdateshell == 0) {
                         skip = '0'
                         return
-                    }   
+                    } else {
+                        mkdir -p ${remote_dir}
+                    }  
                 }
             }
         }
@@ -80,7 +82,7 @@ pipeline {
                         '''
                     } catch(err) {
                         echo "${err}"
-                      }
+                    }
                 }
             }
         }
@@ -108,7 +110,7 @@ pipeline {
                         '''
                     } catch(err) {
                         echo "${err}"
-                      }
+                    }
                 }
             }
         }

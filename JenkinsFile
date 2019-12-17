@@ -50,9 +50,7 @@ pipeline {
                     if (resultUpdateshell == 0) {
                         skip = '0'
                         return
-                    } else {
-                        mkdir -p ${remote_dir}
-                    }  
+                    }
                 }
             }
         }

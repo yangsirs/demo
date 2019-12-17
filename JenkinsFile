@@ -68,7 +68,7 @@ pipeline {
                 script {
                     try {
                         sh '''
-                            mkdir -p ${bak_dir}
+                            mkdir -p ${bak_dir}/${BULID_ID}
                             cd ${remote_dir} && tar zcf ${project}.tgz ${project} && mv ${project}.tgz ${bak_dir}/${BULID_ID}
                             
                             rsync -avz --exclude='JenkinsFile' --exclude=.git --delete ${WORKSPACE}  ${remote_dir}
@@ -100,7 +100,7 @@ pipeline {
                         sh '''
                             cd   ${bak_dir}/${rollback_version}  && tar xf ${project}.tgz
                             rsync -avz --delete ${project}    ${remote_dir}
-                            rm    -rf ${project}  &&  chown -R  nginx.nginx  ${remote_dir}/${project}
+                            rm   -rf ${project}  &&  chown -R  nginx.nginx  ${remote_dir}/${project}
                         '''
                     } catch(err) {
                         echo "${err}"

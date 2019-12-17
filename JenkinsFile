@@ -107,4 +107,14 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            echo 'I succeeeded!'
+        }
+        failure {
+            mail to: 'yangjingwen@pxjy.com',
+            subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+            body: "Something is wrong with ${env.BUILD_URL}"
+        }
+    }
 }
